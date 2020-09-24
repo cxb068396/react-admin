@@ -15,6 +15,7 @@ import Bar from '../charts/bar'
 import Pie from '../charts/pie'
 import Line from '../charts/line'
 import Order from '../order/order'
+import Error from '../error/error'
 
 
 
@@ -39,6 +40,7 @@ class Admin extends Component {
                     <Header></Header>
                     <Content style={{ margin: 20, backgroundColor: '#fff' }}>
                         <Switch>
+                            <Redirect exact from='/' to='/home' />
                             <Route path='/home' component={Home} />
                             <Route path='/category' component={Category} />
                             <Route path='/product' component={Product} />
@@ -48,7 +50,7 @@ class Admin extends Component {
                             <Route path='/charts/line' component={Line} />
                             <Route path='/charts/pie' component={Pie} />
                             <Route path='/order' component={Order} />
-                            <Redirect to='/home' />
+                            <Route component={Error} />
                         </Switch>
 
                     </Content>
