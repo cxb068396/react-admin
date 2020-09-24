@@ -114,7 +114,7 @@ class User extends Component {
         })
 
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.iniitColumns()
     }
     //获取用户的列表

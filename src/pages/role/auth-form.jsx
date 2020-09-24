@@ -28,7 +28,7 @@ export default class AuthForm extends Component {
             checkedKeys: menus
         }
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.treeNodes = this.getTreeNodes(menuList)
     }
     getTreeNodes = (menuList) => {

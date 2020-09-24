@@ -138,7 +138,7 @@ class ProductAddUpdata extends Component {
     componentDidMount() {
         this.getCategorys('0')
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const product = this.props.location.state
         this.isUpdate = !!product  //保存是否要跟新的标识
         this.product = product || {}

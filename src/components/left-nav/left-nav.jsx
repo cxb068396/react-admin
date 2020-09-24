@@ -4,7 +4,10 @@ import { Menu, Icon } from 'antd';
 import logo from '../../assets/images/logo.png'
 import './left-nav.less'
 import menuList from '../../config/menuConfig'
-import memoryUtils from '../../utils/memoryUtils'
+// import memoryUtils from '../../utils/memoryUtils'
+
+import { connect } from 'react-redux'
+import { setHeadTitle } from '../../redux/actions'
 const { SubMenu } = Menu;
 class LeftNav extends Component {
     rootSubmenuKeys = ['/products', '/charts'];
@@ -14,8 +17,10 @@ class LeftNav extends Component {
     //判断当前登录用户对item是否有权限
     hasAuth = (item) => {
         const { key, isPublic } = item
-        const menus = memoryUtils.user.role.menus
-        const username = memoryUtils.user.username
+        // const menus = memoryUtils.user.role.menus
+        // const username = memoryUtils.user.username
+        const menus = this.props.user.role.menus
+        const username = this.props.user.username
         //1.如果当前用户是admin
         //2.如果当前item是公开的
         //3.当前用户有此item的权限:key有没有在menus中
@@ -86,9 +91,15 @@ class LeftNav extends Component {
             if (this.hasAuth(item)) {
                 // 向pre添加<Menu.Item>
                 if (!item.children) {
+                    //判断item是否是当前的对应的item
+                    if (item.key === path || path.indexOf(item.key) === 0) {
+
+                        //  更新redux中的headtitle状态
+                        this.props.setHeadTitle(item.title)
+                    }
                     pre.push((
                         <Menu.Item key={item.key}>
-                            <Link to={item.key}>
+                            <Link to={item.key} onClick={() => this.props.setHeadTitle(item.title)}>
                                 <Icon type={item.icon} />
                                 <span>{item.title}</span>
                             </Link>
@@ -129,7 +140,7 @@ class LeftNav extends Component {
 在第一次render()之前执行一次
 为第一个render()准备数据(必须同步的)
  */
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.menuNodes = this.getMenuNodes(menuList)
     }
     render() {
@@ -167,4 +178,9 @@ class LeftNav extends Component {
 //withRouter高阶组件
 //包装非路由组件,返回一个新的组件
 //新的组件向非路由组件传递3个属性:history,location,match
-export default withRouter(LeftNav);
+export default connect(
+    state => ({
+        user: state.user
+    }),
+    { setHeadTitle }
+)(withRouter(LeftNav));
