@@ -3,6 +3,7 @@ const {
     fixBabelImports,
     addLessLoader
 } = require("customize-cra");
+process.env.GENERATE_SOURCEMAP = "false";
 
 module.exports = override(
     //针对antd实现按需打包;根据import来打包(使babel-plugin-import)
