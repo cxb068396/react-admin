@@ -9,7 +9,7 @@ class UpdateForm extends Component {
         categoryName: PropTypes.string.isRequired,
         setForm: PropTypes.func.isRequired
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         //将form对象的通过setForm()传递副组件
 
         this.props.setForm(this.props.form)

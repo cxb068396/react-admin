@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import { formateDate } from '../../utils/dateUtils'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
+// import memoryUtils from '../../utils/memoryUtils'
+// import storageUtils from '../../utils/storageUtils'
 import { reqWeather } from '../../api/index'
 import menuList from '../../config/menuConfig'
 import './header.less'
 import { Modal } from 'antd';
 import LinkButton from '../link-button'
+import { connect } from 'react-redux'
+import { logout } from '../../redux/actions'
 class Header extends Component {
     state = {
         currentTime: formateDate(Date.now()), //当前时间
@@ -57,9 +59,10 @@ class Header extends Component {
             content: '您确定要退出后台吗',
             onOk: () => {
                 //清除保存的user数据,跳转到login页面
-                storageUtils.removerUser()
-                memoryUtils.user = {}
-                this.props.history.replace('/login')
+                // storageUtils.removerUser()
+                // memoryUtils.user = {}
+                this.props.logout()
+                //this.props.history.replace('/login')
             },
             onCancel() { },
         });
@@ -76,9 +79,11 @@ class Header extends Component {
     }
     render() {
         const { currentTime, dayPictureUrl, weather } = this.state
-        const username = memoryUtils.user.username
+        // const username = memoryUtils.user.username
+        const username = this.props.user.username
         //取出当前页对应的title
-        const title = this.getTitle()
+        // const title = this.getTitle()
+        const title = this.props.headTitle
         return (
             <div className='header'>
                 <div className='header-top'>
@@ -100,4 +105,11 @@ class Header extends Component {
     }
 }
 
-export default withRouter(Header);
+export default connect(
+    state => ({
+        headTitle: state.headTitle,
+        user: state.user
+    }),
+    { logout }
+
+)(withRouter(Header))

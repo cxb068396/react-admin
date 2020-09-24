@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import memoryUtils from '../../utils/memoryUtils'
+// import memoryUtils from '../../utils/memoryUtils'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { Layout } from 'antd'
 import LeftNav from '../../components/left-nav/left-nav'
 import Header from '../../components/header/header'
+import { connect } from 'react-redux'
 
 import Home from '../home/home'
 import Category from '../category/category'
@@ -19,9 +20,11 @@ import Order from '../order/order'
 
 
 const { Footer, Sider, Content } = Layout;
-export default class Admin extends Component {
+class Admin extends Component {
     render() {
-        const user = memoryUtils.user
+        // const user = memoryUtils.user
+
+        const user = this.props.user
         //如果内存中没有存储user===》当前没有登录
         if (!user || !user._id) {
             return <Redirect to='/login' />
@@ -56,3 +59,7 @@ export default class Admin extends Component {
         )
     }
 }
+export default connect(
+    state => ({ user: state.user }),
+    {}
+)(Admin)

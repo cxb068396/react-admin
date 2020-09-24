@@ -5,9 +5,11 @@ import { reqRoles, reqAddRole, reqUpdateRole } from '../../api/index'
 import AddForm from './add-form'
 
 import AuthForm from './auth-form'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
+// import memoryUtils from '../../utils/memoryUtils'
+// import storageUtils from '../../utils/storageUtils'
 import { formateDate } from '../../utils/dateUtils'
+import { connect } from 'react-redux'
+import { logout } from '../../redux/actions'
 class Role extends Component {
     state = {
         roles: [],//所有角色的列表
@@ -64,7 +66,7 @@ class Role extends Component {
             })
         }
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.initColumn()
     }
     //添加角色
@@ -119,7 +121,9 @@ class Role extends Component {
         //得到最新的menus
         const menus = this.auth.current.getMenus()
         role.menus = menus
-        role.auth_name = memoryUtils.user.username
+        // role.auth_name = memoryUtils.user.username
+        role.auth_name = this.props.user.username
+
         role.auth_time = Date.now()
         //请求更新
         const result = await reqUpdateRole(role)
@@ -128,11 +132,14 @@ class Role extends Component {
             // this.getRoles()
 
             //如果当前更新的是自己角色的权限强制退出
-            if (role._id === memoryUtils.user.role_id) {
-                memoryUtils.user = {}
-                storageUtils.removerUser()
+            // if (role._id === memoryUtils.user.role_id) {
+            if (role._id === this.props.user.role_id) {
+                // memoryUtils.user = {}
+                // storageUtils.removerUser()
+                //  this.props.history.replace('/login')
+                this.props.logout()
                 message.info('当前用户角色修改来,重新登录')
-                this.props.history.replace('/login')
+
 
             } else {
                 message.success('设置权限成功')
@@ -224,4 +231,7 @@ class Role extends Component {
         );
     }
 }
-export default Role
+export default connect(
+    state => ({ user: state.user }),
+    { logout }
+)(Role)

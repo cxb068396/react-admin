@@ -22,7 +22,7 @@ class UserForm extends PureComponent {
         user: PropTypes.object // 用来传递form对象的函数
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.setForm(this.props.form)
     }
 
